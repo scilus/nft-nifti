@@ -36,6 +36,12 @@
 		<additionalparam>-Xdoclint:none</additionalparam>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -43,6 +49,11 @@
 			<artifactId>junit-jupiter</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.amirshamaei</groupId>
+			<artifactId>niftijio</artifactId>
+			<version>9f44a3d846692e23b0610e1d2abfd768d25eb453</version>
 		</dependency>
 	</dependencies>
 </project>
