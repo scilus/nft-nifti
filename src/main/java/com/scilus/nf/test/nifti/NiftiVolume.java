@@ -1,6 +1,6 @@
-package com.scilus.nft-nifti;
+package com.scilus.nf.test.nifti;
 
-import com.scilus.nft-nifti.tools.IndexIterator;
+import com.scilus.nf.test.nifti.tools.IndexIterator;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -47,26 +47,26 @@ public class NiftiVolume
 //        this.data = new NDimensionalArray(dims);
 //    }
 
-    public NiftiVolume(Nifti2Header hdr)
-    {
-        this.header = hdr;
-        int[] dims = new int[7];
+    // public NiftiVolume(Nifti2Header hdr)
+    // {
+    //     this.header = hdr;
+    //     int[] dims = new int[7];
 
-        if (hdr.datatype == Nifti2Header.NIFTI_TYPE_COMPLEX64 || hdr.datatype == Nifti2Header.NIFTI_TYPE_COMPLEX128) {
-            dims[0] = (int) (hdr.dim[1]*2);
-        } else {
-            dims[0] = (int) hdr.dim[1];
-        }
+    //     if (hdr.datatype == Nifti2Header.NIFTI_TYPE_COMPLEX64 || hdr.datatype == Nifti2Header.NIFTI_TYPE_COMPLEX128) {
+    //         dims[0] = (int) (hdr.dim[1]*2);
+    //     } else {
+    //         dims[0] = (int) hdr.dim[1];
+    //     }
 
-        for (int i = 2; i < 8; i++) {
-            dims[i-1] = (int) hdr.dim[i];
-            if (dims[i-1] == 0)
-                dims[i-1] = 1;
-        }
-        v = false;
-        this.data = new NDimensionalArray(dims);
+    //     for (int i = 2; i < 8; i++) {
+    //         dims[i-1] = (int) hdr.dim[i];
+    //         if (dims[i-1] == 0)
+    //             dims[i-1] = 1;
+    //     }
+    //     v = false;
+    //     this.data = new NDimensionalArray(dims);
 
-    }
+    // }
 
     public NiftiVolume(Nifti1Header hdr)
     {
@@ -576,9 +576,8 @@ public class NiftiVolume
 
     public boolean compare(String i_file_1, String i_file_2, Float threshold) throws IOException
     {
-        new NiftiVolume1 = NiftiVolume.read(i_file_1);
-        new NiftiVolume2 = NiftiVolume.read(i_file_2);
-
-	return val < threshold
+        NiftiVolume f1 = NiftiVolume.read(i_file_1);
+        NiftiVolume f2 = NiftiVolume.read(i_file_2);
+    	return threshold;
     }
 }

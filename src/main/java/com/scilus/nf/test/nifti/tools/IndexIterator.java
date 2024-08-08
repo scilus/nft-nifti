@@ -1,4 +1,4 @@
-package com.scilus.nft-nifti.tools;
+package com.scilus.nf.test.nifti.tools;
 
 import java.util.ArrayList;
 import java.util.Arrays;
