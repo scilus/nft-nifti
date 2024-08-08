@@ -1,0 +1,23 @@
+nextflow_process {
+
+  name "Test COPY_NIFTI"
+
+  script "tests/copy_nifti/copy_nifti.nf"
+  process "COPY_NIFTI"
+
+  test("Should work with nifti") {
+
+    when {
+      process {
+        """
+        input[0] = file("$baseDir/tests/t1.nii.gz", checkIfExists: true)
+
+        """
+      }
+    }
+    then {
+      assert compare(process.out.nifti.get(0), process.out.nifti.get(0))
+    }
+
+  }
+}
