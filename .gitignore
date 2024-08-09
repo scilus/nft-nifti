@@ -1,2 +1,6 @@
 .nf-test
 .nf-test.log
+
+target/*
+
+.vscode/*
