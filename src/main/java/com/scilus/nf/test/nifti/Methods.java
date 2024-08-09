@@ -23,7 +23,7 @@ public class Methods
 
         // ArrayList of the image
         for (int[] indc: indcs) {
-            list.add(String.valueOf(d.get(indc)));
+            list.add(String.valueOf(d.get(indc)).replace(".", ""));
         }
         
         // Remove duplicated
@@ -32,14 +32,7 @@ public class Methods
         list.addAll(set);
 
         // Create a string
-        String r = list.stream().collect(Collectors.joining("_"));
-        
-        // Replace filename with basename
-        f1.filename = f1.filename.replace("\\", "/");
-        int index = f1.filename.lastIndexOf("/");
-        f1.filename = f1.filename.substring(index + 1);
-
-        // Create md5 from r
+        String r = list.stream().collect(Collectors.joining(""));
         byte[] bytesOfMessage = r.getBytes("UTF-8");
         String md5 = "";
         try {
@@ -51,6 +44,12 @@ public class Methods
             System.err.println("I'm sorry, but MD5 is not a valid message digest algorithm");
         }
 
-       	return md5;
+        // Replace filename with basename
+        f1.filename = f1.filename.replace("\\", "/");
+        int index = f1.filename.lastIndexOf("/");
+        f1.filename = f1.filename.substring(index + 1);
+
+
+       	return md5.replace("\0", "").replaceAll("[(){}]", "");
     }
 }
