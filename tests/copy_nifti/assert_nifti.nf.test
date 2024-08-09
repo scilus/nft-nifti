@@ -16,7 +16,7 @@ nextflow_process {
       }
     }
     then {
-      assert compare(process.out.nifti.get(0), process.out.nifti.get(0))
+      assert compare(process.out.nifti.get(0))
     }
 
   }
