@@ -1,10 +1,11 @@
-import  com.ericbarnhill.niftijio.*;
+package com.scilus.nf.test.nifti;
 
-import java.io.*;
+import com.ericbarnhill.niftijio.*;
+import java.io.IOException;
 
 public class Methods
 {
-    public static boolean compare(String i_file_1, String i_file_2, Float threshold) throws IOException
+    public static boolean compare(String i_file_1, String i_file_2) throws IOException
     {
         NiftiVolume f1 = NiftiVolume.read(i_file_1);
         NiftiVolume f2 = NiftiVolume.read(i_file_2);
