@@ -5,7 +5,23 @@ nextflow_process {
   script "tests/copy_nifti/copy_nifti.nf"
   process "COPY_NIFTI"
 
-  test("Should work with nifti") {
+  test("Should work with nifti - dwi") {
+
+    when {
+      process {
+        """
+        input[0] = file("$baseDir/tests/sub-200_ses-T2_T1w.nii.gz", checkIfExists: true)
+
+        """
+      }
+    }
+    then {
+      assert snapshot(compare(process.out.nifti.get(0))).match()
+    }
+
+  }
+
+  test("Should work with nifti - t1") {
 
     when {
       process {
@@ -20,4 +36,5 @@ nextflow_process {
     }
 
   }
+
 }

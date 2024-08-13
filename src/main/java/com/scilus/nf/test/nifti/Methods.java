@@ -7,7 +7,6 @@ import java.util.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
 
 public class Methods
 {
@@ -18,38 +17,29 @@ public class Methods
         Nifti1Header f1 = v.getHeader1();
         NDimensionalArray d = v.getData();
 
-        ArrayList<String> list = new ArrayList<String>();
         ArrayList<int[]> indcs = new IndexIterator().iterateReverse(d.getDims());
 
-        // ArrayList of the image
-        for (int[] indc: indcs) {
-            list.add(String.valueOf(d.get(indc)).replace(".", ""));
-        }
-        
-        // Remove duplicated
-        Set<String> set = new HashSet<>(list);
-        list.clear();
-        list.addAll(set);
-
-        // Create a string
-        String r = list.stream().collect(Collectors.joining(""));
-        byte[] bytesOfMessage = r.getBytes("UTF-8");
         String md5 = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] theMD5digest = md.digest(bytesOfMessage);
+            for (int[] indc: indcs) {
+                md.update(String.valueOf(d.get(indc)).getBytes("UTF-8"));
+            }
+
+            // Replace filename with basename and remove descrip
+            f1.filename = f1.filename.replace("\\", "/");
+            int index = f1.filename.lastIndexOf("/");
+            f1.filename = f1.filename.substring(index + 1);
+            f1.descrip = new StringBuffer("");
+        
+            md.update(f1.toString().replace("\0","").getBytes("UTF-8"));
+            byte[] theMD5digest = md.digest();
             md5 = new String(theMD5digest, StandardCharsets.UTF_8);
         }
         catch (NoSuchAlgorithmException e) {
             System.err.println("I'm sorry, but MD5 is not a valid message digest algorithm");
-        }
+        }       	
 
-        // Replace filename with basename
-        f1.filename = f1.filename.replace("\\", "/");
-        int index = f1.filename.lastIndexOf("/");
-        f1.filename = f1.filename.substring(index + 1);
-
-
-       	return md5.replace("\0", "").replaceAll("[(){}]", "");
+        return md5.replace("\0", "").replaceAll("[(){}]", "");
     }
 }
