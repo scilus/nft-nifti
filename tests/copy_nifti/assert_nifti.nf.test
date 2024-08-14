@@ -15,7 +15,7 @@ nextflow_process {
       }
     }
     then {
-      assert snapshot(md5sum(process.out.nifti.get(0))).match()
+      assert snapshot(Nifti_md5sum(process.out.nifti.get(0))).match()
     }
   }
 }

@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Methods
 {
-    public static String md5sum(String i_file) throws IOException
+    public static String Nifti_md5sum(String i_file) throws IOException
     {
 
         NiftiVolume v = NiftiVolume.read(i_file);
