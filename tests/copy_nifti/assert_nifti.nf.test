@@ -1,0 +1,21 @@
+nextflow_process {
+
+  name "Test COPY_NIFTI"
+
+  script "tests/copy_nifti/copy_nifti.nf"
+  process "COPY_NIFTI"
+
+  test("Test - nft-nifti") {
+
+    when {
+      process {
+        """
+        input[0] = file("$baseDir/tests/dummy.nii.gz", checkIfExists: true)
+        """
+      }
+    }
+    then {
+      assert snapshot(Nifti_md5sum(process.out.nifti.get(0))).match()
+    }
+  }
+}

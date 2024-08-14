@@ -1,0 +1,12 @@
+{
+    "Test - nft-nifti": {
+        "content": [
+            "output.nii.gz:md5,U\ufffd#\ufffd\ufffd\"\t\ufffdI\u0005\ufffd\u82cc\ufffd\ufffd"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-08-14T11:24:31.729639038"
+    }
+}

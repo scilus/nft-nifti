@@ -1,0 +1,4 @@
+moduleName=nft-nifti
+moduleVersion=0.0.1
+moduleAuthors=scilus
+extensionMethods=com.scilus.nf.test.nifti.Methods
