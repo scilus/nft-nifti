@@ -5,8 +5,20 @@ nextflow_process {
   script "tests/copy_nifti/copy_nifti.nf"
   process "COPY_NIFTI"
 
-  test("Test - nft-nifti") {
+  test("Test - nft-nifti - precision 2") {
+    when {
+      process {
+        """
+        input[0] = file("$baseDir/tests/dummy.nii.gz", checkIfExists: true)
+        """
+      }
+    }
+    then {
+      assert snapshot(Nifti_md5sum(process.out.nifti.get(0), 2)).match()
+    }
+  }
 
+  test("Test - nft-nifti - precision default") {
     when {
       process {
         """
@@ -16,6 +28,19 @@ nextflow_process {
     }
     then {
       assert snapshot(Nifti_md5sum(process.out.nifti.get(0))).match()
+    }
+  }
+
+  test("Test - nft-nifti - precision 8") {
+    when {
+      process {
+        """
+        input[0] = file("$baseDir/tests/dummy.nii.gz", checkIfExists: true)
+        """
+      }
+    }
+    then {
+      assert snapshot(Nifti_md5sum(process.out.nifti.get(0), 8)).match()
     }
   }
 }

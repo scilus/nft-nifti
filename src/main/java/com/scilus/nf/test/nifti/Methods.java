@@ -6,11 +6,14 @@ import java.io.IOException;
 import java.util.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.nio.charset.StandardCharsets;
 
 public class Methods
 {
     public static String Nifti_md5sum(String i_file) throws IOException
+    {
+        return Nifti_md5sum(i_file, 8);
+    }
+    public static String Nifti_md5sum(String i_file, Integer precision) throws IOException
     {
 
         NiftiVolume v = NiftiVolume.read(i_file);
@@ -23,7 +26,8 @@ public class Methods
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             for (int[] indc: indcs) {
-                md.update(String.valueOf(d.get(indc)).getBytes("UTF-8"));
+                String val = String.format("%."+ precision +"f", d.get(indc));
+                md.update(val.getBytes("UTF-8"));
             }
 
             // Replace filename with basename and remove descrip
