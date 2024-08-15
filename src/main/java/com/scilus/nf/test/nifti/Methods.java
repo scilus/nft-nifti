@@ -23,10 +23,11 @@ public class Methods
         ArrayList<int[]> indcs = new IndexIterator().iterateReverse(d.getDims());
 
         StringBuilder md5 = new StringBuilder();
+        String val = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             for (int[] indc: indcs) {
-                String val = String.format("%."+ precision +"f", d.get(indc));
+                val = String.format("%."+ precision +"f", d.get(indc));
                 md.update(val.getBytes("UTF-8"));
             }
 
@@ -36,7 +37,7 @@ public class Methods
             h.filename = h.filename.substring(index + 1);
             h.descrip = new StringBuffer("");
         
-            md.update(h.toString().replace("\0","").getBytes("UTF-8"));
+            //md.update(h.toString().replace("\0","").getBytes("UTF-8"));
             byte[] theMD5digest = md.digest();
 
             for (int i = 0; i < theMD5digest.length; i++) {
