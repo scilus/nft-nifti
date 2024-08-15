@@ -42,7 +42,7 @@ public class Methods
             h.filename = h.filename.substring(index + 1);
             h.descrip = new StringBuffer("");
         
-            //md.update(h.toString().replace("\0","").getBytes("UTF-8"));
+            md.update(h.encodeHeader());
             md5 = Hex.encodeHexString(md.digest());
         }
         catch (NoSuchAlgorithmException e) {
