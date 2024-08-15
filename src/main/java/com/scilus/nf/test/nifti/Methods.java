@@ -19,7 +19,7 @@ public class Methods
 
         ArrayList<int[]> indcs = new IndexIterator().iterateReverse(d.getDims());
 
-        String md5 = "";
+        StringBuilder md5 = new StringBuilder();
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             for (int[] indc: indcs) {
@@ -34,12 +34,19 @@ public class Methods
         
             md.update(h.toString().replace("\0","").getBytes("UTF-8"));
             byte[] theMD5digest = md.digest();
-            md5 = new String(theMD5digest, StandardCharsets.UTF_8);
+
+            for (int i = 0; i < theMD5digest.length; i++) {
+                String hex = Integer.toHexString(0xFF & theMD5digest[i]);
+                if (hex.length() == 1) {
+                    md5.append('0');
+                }
+                md5.append(hex);
+            }
         }
         catch (NoSuchAlgorithmException e) {
             System.err.println("I'm sorry, but MD5 is not a valid message digest algorithm");
         }       	
 
-        return h.filename + ":md5," + md5.replace("\0", "").replaceAll("[(){}]", "");
+        return h.filename + ":md5," + md5.toString();
     }
 }
