@@ -1,32 +1,32 @@
 {
     "Test - nft-nifti - precision 2": {
         "content": [
-            "0.00"
+            "output.nii.gz:md5,8dfd581269cf2867bdcb0872c43c53c5"
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "23.10.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-08-15T13:43:50.742394408"
+        "timestamp": "2024-08-15T16:39:08.353777"
     },
     "Test - nft-nifti - precision 8": {
         "content": [
-            "0.00000000"
+            "output.nii.gz:md5,8dfd581269cf2867bdcb0872c43c53c5"
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "23.10.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-08-15T13:44:05.728732555"
+        "timestamp": "2024-08-15T16:39:23.452867"
     },
     "Test - nft-nifti - precision default": {
         "content": [
-            "0.00000000"
+            "output.nii.gz:md5,8dfd581269cf2867bdcb0872c43c53c5"
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "23.10.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-08-15T13:43:58.559399564"
+        "timestamp": "2024-08-15T16:39:15.975119"
     }
 }

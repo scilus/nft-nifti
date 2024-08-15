@@ -2,7 +2,10 @@ package com.scilus.nf.test.nifti;
 
 import com.ericbarnhill.niftijio.*;
 import com.ericbarnhill.niftijio.tools.*;
+import org.apache.commons.codec.binary.Hex;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -13,7 +16,7 @@ public class Methods
     {
         return Nifti_md5sum(i_file, 8);
     }
-    public static String Nifti_md5sum(String i_file, Integer precision) throws IOException
+    public static String Nifti_md5sum(String i_file, Integer precision) throws IOException, ArithmeticException
     {
 
         NiftiVolume v = NiftiVolume.read(i_file);
@@ -22,13 +25,15 @@ public class Methods
 
         ArrayList<int[]> indcs = new IndexIterator().iterateReverse(d.getDims());
 
-        StringBuilder md5 = new StringBuilder();
-        String val = "";
+        String md5 = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             for (int[] indc: indcs) {
-                val = String.format("%."+ precision +"f", d.get(indc));
-                md.update(val.getBytes("UTF-8"));
+                md.update(
+                    BigDecimal.valueOf(d.get(indc))
+                              .setScale(precision, RoundingMode.FLOOR)
+                              .byteValue()
+                );
             }
 
             // Replace filename with basename and remove descrip
@@ -38,15 +43,7 @@ public class Methods
             h.descrip = new StringBuffer("");
         
             //md.update(h.toString().replace("\0","").getBytes("UTF-8"));
-            byte[] theMD5digest = md.digest();
-
-            for (int i = 0; i < theMD5digest.length; i++) {
-                String hex = Integer.toHexString(0xFF & theMD5digest[i]);
-                if (hex.length() == 1) {
-                    md5.append('0');
-                }
-                md5.append(hex);
-            }
+            md5 = Hex.encodeHexString(md.digest());
         }
         catch (NoSuchAlgorithmException e) {
             System.err.println("I'm sorry, but MD5 is not a valid message digest algorithm");
