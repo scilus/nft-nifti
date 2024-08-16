@@ -3,9 +3,13 @@ package com.scilus.nf.test.nifti;
 import com.ericbarnhill.niftijio.*;
 import com.ericbarnhill.niftijio.tools.*;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.apache.commons.codec.binary.Hex;
 
 public class Methods
 {
@@ -22,31 +26,31 @@ public class Methods
 
         ArrayList<int[]> indcs = new IndexIterator().iterateReverse(d.getDims());
 
-        StringBuilder md5 = new StringBuilder();
-        String val = "";
+        String md5 = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            for (int[] indc: indcs) {
-                val = String.format("%."+ precision +"f", d.get(indc));
-                md.update(val.getBytes("UTF-8"));
-            }
+            indcs.forEach((indc) -> {
+                BigDecimal item = BigDecimal.valueOf(d.get(indc))
+                                            .setScale(precision, RoundingMode.FLOOR);
 
+                BigInteger offset = BigInteger
+                    .valueOf(item.stripTrailingZeros().scale() - precision);
+
+                // Here, only checking the unscaled value is not enough. We get 1234 from 
+                // either 0.1234 or 0.01234, up to precision (with precision 5, the first
+                // being 0.12340). We add the number of trailing zeros to the result to
+                // differentiate those unscaled values. It doesn't affect the value nor the
+                // uniqueness of the md5sum, as long as it is performed with this technique.
+                md.update(item.unscaledValue().add(offset).toByteArray());
+            });
             // Replace filename with basename and remove descrip
             h.filename = h.filename.replace("\\", "/");
             int index = h.filename.lastIndexOf("/");
             h.filename = h.filename.substring(index + 1);
             h.descrip = new StringBuffer("");
         
-            //md.update(h.toString().replace("\0","").getBytes("UTF-8"));
-            byte[] theMD5digest = md.digest();
-
-            for (int i = 0; i < theMD5digest.length; i++) {
-                String hex = Integer.toHexString(0xFF & theMD5digest[i]);
-                if (hex.length() == 1) {
-                    md5.append('0');
-                }
-                md5.append(hex);
-            }
+            // md.update(h.encodeHeader());
+            md5 = Hex.encodeHexString(md.digest());
         }
         catch (NoSuchAlgorithmException e) {
             System.err.println("I'm sorry, but MD5 is not a valid message digest algorithm");
