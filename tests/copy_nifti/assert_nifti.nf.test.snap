@@ -2,6 +2,7 @@
     "Test - nft-nifti - precision 2": {
         "content": [
             "output.nii.gz:md5,eb1bc18d187c12991d18a9b26175b071"
+            "output.nii.gz:md5,eb1bc18d187c12991d18a9b26175b071"
         ],
         "meta": {
             "nf-test": "0.9.0",
@@ -12,6 +13,7 @@
     "Test - nft-nifti - precision 8": {
         "content": [
             "output.nii.gz:md5,df1eedb67d9511f0919a9f88d0031281"
+            "output.nii.gz:md5,df1eedb67d9511f0919a9f88d0031281"
         ],
         "meta": {
             "nf-test": "0.9.0",
@@ -21,6 +23,7 @@
     },
     "Test - nft-nifti - precision default": {
         "content": [
+            "output.nii.gz:md5,df1eedb67d9511f0919a9f88d0031281"
             "output.nii.gz:md5,df1eedb67d9511f0919a9f88d0031281"
         ],
         "meta": {
