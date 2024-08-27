@@ -54,6 +54,6 @@ public class MethodsTest {
         Files.delete(tempDir);
         // assert result
         Assertions.assertEquals(
-            "test.nii.gz:md5:header,034423d52827faf2458de5464df120d4,data,3115549a4198ba1737aef3134792c3e6", result);
+            "test.nii.gz:md5:header,034423d52827faf2458de5464df120d4,data,be888dbe0ba0a535ffa716e587a17469", result);
     }
 }

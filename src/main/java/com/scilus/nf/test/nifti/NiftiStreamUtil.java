@@ -55,10 +55,9 @@ public class NiftiStreamUtil {
             .iterateReverse(data.getDims())
             .stream()
             .map(it -> {
-                double valRounded = BigDecimal.valueOf(data.get(it))
+                return BigDecimal.valueOf(data.get(it))
                     .setScale(precision, RoundingMode.FLOOR)
-                    .doubleValue();
-                return ByteBuffer.allocate(8).putDouble(valRounded).array();
+                    .unscaledValue().toByteArray();
             });
 
         return new DataInputStream(StreamUtil.getDataConsumer(stream));

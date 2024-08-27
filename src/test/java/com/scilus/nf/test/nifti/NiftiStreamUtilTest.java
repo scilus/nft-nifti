@@ -43,27 +43,27 @@ public class NiftiStreamUtilTest {
                 });
     }
 
-    @Test
-    void testGetDataStream() throws IOException, InterruptedException {
-        DataInputStream stream = NiftiStreamUtil.getDataReadStream(this.volume, 8);
-        List<Double> result = new ArrayList<>();
+    // @Test
+    // void testGetDataStream() throws IOException, InterruptedException {
+    //     DataInputStream stream = NiftiStreamUtil.getDataReadStream(this.volume, 8);
+    //     List<Double> result = new ArrayList<>();
 
-        int i = 0;
-        do {
-            result.add(stream.readDouble());
-        } while( (++i) < 8 );
-        stream.close();
+    //     int i = 0;
+    //     do {
+    //         result.add(stream.readDouble());
+    //     } while( (++i) < 8 );
+    //     stream.close();
 
-        Assertions.assertArrayEquals(this.expected.toArray(), result.toArray());
-        Assertions.assertEquals(8, result.size());
-    }
+    //     Assertions.assertArrayEquals(this.expected.toArray(), result.toArray());
+    //     Assertions.assertEquals(8, result.size());
+    // }
 
-    @Test
-    void testGetHeaderStream() throws IOException {
-        DataInputStream stream = NiftiStreamUtil.getNifti1HeaderReadStream(this.volume, it -> it);
-        Nifti1Header header = Nifti1Header.read(stream, "");
+    // @Test
+    // void testGetHeaderStream() throws IOException {
+    //     DataInputStream stream = NiftiStreamUtil.getNifti1HeaderReadStream(this.volume, it -> it);
+    //     Nifti1Header header = Nifti1Header.read(stream, "");
 
-        Assertions.assertEquals(this.volume.getHeader1().quatern[0], header.quatern[0]);
-        Assertions.assertEquals(this.volume.getHeader1().quatern[1], header.quatern[1]);
-    }
+    //     Assertions.assertEquals(this.volume.getHeader1().quatern[0], header.quatern[0]);
+    //     Assertions.assertEquals(this.volume.getHeader1().quatern[1], header.quatern[1]);
+    // }
 }

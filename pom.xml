@@ -6,7 +6,7 @@
 
     <groupId>com.scilus</groupId>
     <artifactId>nft-nifti</artifactId>
-	<version>0.0.1-rc2</version>
+	<version>0.0.1-rc3</version>
 	<packaging>jar</packaging>
 
 	<name>nf-test-neuro</name>
