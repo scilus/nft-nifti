@@ -6,7 +6,7 @@
 
     <groupId>com.scilus</groupId>
     <artifactId>nft-nifti</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.1-rc2</version>
 	<packaging>jar</packaging>
 
 	<name>nf-test-neuro</name>
@@ -44,6 +44,12 @@
 	</repositories>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.ejml</groupId>
+			<artifactId>ejml-all</artifactId>
+			<version>0.43</version>
+		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
