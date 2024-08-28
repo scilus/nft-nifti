@@ -1,30 +1,29 @@
 package com.scilus.nf.test.nifti;
 
-import java.util.List;
-import java.util.stream.Stream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StreamUtilTest {
     @Test
     void testGetDataConsumer() throws IOException {
-        List<Double> data = new ArrayList<>(Arrays.asList( 1.0, 2.0, 3.0 ));
+        List<Double> data = new ArrayList<>(Arrays.asList(1.0, 2.0, 3.0));
         Stream<byte[]> stream = data
-            .stream()
-            .map(it -> {
-                return ByteBuffer.allocate(8).putDouble(it).array();
-            });
+                .stream()
+                .map(it -> {
+                    return ByteBuffer.allocate(8).putDouble(it).array();
+                });
         DataInputStream reader = new DataInputStream(StreamUtil.getDataConsumer(stream));
         List<Double> results = new ArrayList<>(Arrays.asList(
-            reader.readDouble(), reader.readDouble(), reader.readDouble()
-        ));
+                reader.readDouble(), reader.readDouble(), reader.readDouble()));
 
         reader.close();
 
@@ -33,12 +32,11 @@ public class StreamUtilTest {
 
     @Test
     void testGetDoubleDataConsumer() throws IOException {
-        List<Double> data = new ArrayList<>(Arrays.asList( 1.0, 2.0, 3.0 ));
+        List<Double> data = new ArrayList<>(Arrays.asList(1.0, 2.0, 3.0));
         DataInputStream reader = new DataInputStream(
-            StreamUtil.getDoubleDataConsumer(data.stream()));
+                StreamUtil.getDoubleDataConsumer(data.stream()));
         List<Double> results = new ArrayList<>(Arrays.asList(
-            reader.readDouble(), reader.readDouble(), reader.readDouble()
-        ));
+                reader.readDouble(), reader.readDouble(), reader.readDouble()));
 
         reader.close();
 
@@ -48,10 +46,9 @@ public class StreamUtilTest {
     @Test
     void testGetDataSupplier() throws IOException {
         List<byte[]> data = new ArrayList<>(Arrays.asList(
-            ByteBuffer.allocate(8).array(),
-            ByteBuffer.allocate(8).array(),
-            ByteBuffer.allocate(8).array()
-        ));
+                ByteBuffer.allocate(8).array(),
+                ByteBuffer.allocate(8).array(),
+                ByteBuffer.allocate(8).array()));
         DataOutputStream writer = StreamUtil.getDataSupplier(data.stream());
         writer.writeDouble(1.0);
         writer.writeDouble(2.0);
@@ -62,6 +59,6 @@ public class StreamUtilTest {
             return ByteBuffer.wrap(it).getDouble();
         }).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
-        Assertions.assertArrayEquals(result.toArray(), Arrays.asList( 1.0, 2.0, 3.0 ).toArray());
+        Assertions.assertArrayEquals(result.toArray(), Arrays.asList(1.0, 2.0, 3.0).toArray());
     }
 }

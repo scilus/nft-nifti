@@ -1,6 +1,5 @@
 package com.scilus.nf.test.nifti;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PipedInputStream;
@@ -11,7 +10,7 @@ import java.util.stream.Stream;
 
 public class StreamUtil {
     public static PipedInputStream getDoubleDataConsumer(Stream<Double> data) throws IOException {
-        return StreamUtil.getDataConsumer(data.map( it -> {
+        return StreamUtil.getDataConsumer(data.map(it -> {
             return ByteBuffer.allocate(8).putDouble(it).array();
         }));
     }
