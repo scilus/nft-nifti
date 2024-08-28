@@ -54,6 +54,46 @@ public class NiftiUtil {
                 NiftiUtil.niftiTensorToArray(tensor, idx));
     }
 
+    public static NiftiVolume flipVectorPositiveDefinite(NiftiVolume vector, NiftiVolume tensor) {
+        NiftiVolume determinant = NiftiUtil.tensorDeterminants(tensor);
+        int[] spatialShape = new int[] {
+                vector.getData().sizeX(),
+                vector.getData().sizeY(),
+                vector.getData().sizeZ()
+        };
+
+        new IndexIterator().iterateReverse(spatialShape)
+                .parallelStream()
+                .forEach(it -> {
+                    double det = determinant.getData().get(it);
+                    if (det < 0) {
+                        vector.getData().set(it, -vector.getData().get(it));
+                    }
+                });
+
+        return vector;
+    }
+
+    public static NiftiVolume tensorDeterminants(NiftiVolume tensor) {
+        int[] spatialShape = new int[] {
+                tensor.getData().sizeX(),
+                tensor.getData().sizeY(),
+                tensor.getData().sizeZ()
+        };
+
+        NiftiVolume determinant = new NiftiVolume(tensor.getHeader1());
+        determinant.getData().setDims(spatialShape);
+
+        new IndexIterator().iterateReverse(spatialShape)
+                .parallelStream()
+                .forEach(it -> {
+                    double[] tensorCoeff = NiftiUtil.niftiTensorToArray(tensor, it);
+                    determinant.getData().set(it, NiftiUtil.normalizedDeterminant(tensorCoeff));
+                });
+
+        return determinant;
+    }
+
     public static NiftiVolume forceTensorPositiveDefinite(NiftiVolume tensor) {
         int[] spatialShape = new int[] {
                 tensor.getData().sizeX(),
@@ -61,12 +101,13 @@ public class NiftiUtil {
                 tensor.getData().sizeZ()
         };
 
+        NiftiVolume determinant = NiftiUtil.tensorDeterminants(tensor);
         new IndexIterator().iterateReverse(spatialShape)
                 .parallelStream()
                 .forEach(its -> {
                     double[] tensorCoeff = NiftiUtil.niftiTensorToArray(tensor, its);
-                    double determinant = NiftiUtil.normalizedDeterminant(tensorCoeff);
-                    boolean negPos = determinant + Math.abs(determinant) < 1e-6;
+                    double det = determinant.getData().get(its);
+                    boolean negPos = det + Math.abs(det) < 1e-6;
 
                     new IndexIterator().iterate(new int[] { 6 })
                             .parallelStream()

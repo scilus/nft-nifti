@@ -14,6 +14,22 @@ import com.ericbarnhill.niftijio.NiftiVolume;
 import com.ericbarnhill.niftijio.tools.IndexIterator;
 
 public class Methods {
+    public static String vectorMD5SUM(String i_file, String tensor_file) throws IOException {
+        return vectorMD5SUM(i_file, tensor_file, 8);
+    }
+
+    public static String vectorMD5SUM(String i_file, String tensor_file, Integer precision) throws IOException {
+        NiftiVolume vector = NiftiUtil.flipVectorPositiveDefinite(
+            NiftiVolume.read(i_file), NiftiVolume.read(tensor_file)
+        );
+
+        return vectorMD5SUM(vector, precision);
+    }
+
+    public static String vectorMD5SUM(NiftiVolume v, Integer precision) throws IOException {
+        return niftiMD5SUM(v, precision);
+    }
+
     public static String tensorMD5SUM(String i_file) throws IOException {
         return tensorMD5SUM(i_file, 8);
     }
