@@ -1,61 +1,99 @@
 package com.scilus.nf.test.nifti;
 
-import com.ericbarnhill.niftijio.*;
-import com.ericbarnhill.niftijio.tools.*;
+import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import org.apache.commons.codec.binary.Hex;
+import java.util.stream.Collectors;
 
-public class Methods
-{
-    public static String Nifti_md5sum(String i_file) throws IOException
-    {
-        return Nifti_md5sum(i_file, 8);
+import org.apache.commons.codec.digest.DigestUtils;
+
+import com.ericbarnhill.niftijio.Nifti1Header;
+import com.ericbarnhill.niftijio.NiftiVolume;
+import com.ericbarnhill.niftijio.tools.IndexIterator;
+
+public class Methods {
+    public static String vectorMD5SUM(String i_file, String tensor_file) throws IOException {
+        return vectorMD5SUM(i_file, tensor_file, 8);
     }
-    public static String Nifti_md5sum(String i_file, Integer precision) throws IOException
-    {
 
+    public static String vectorMD5SUM(String i_file, String tensor_file, Integer precision) throws IOException {
+        NiftiVolume vector = NiftiUtil.flipVectorPositiveDefinite(
+            NiftiVolume.read(i_file), NiftiVolume.read(tensor_file)
+        );
+
+        return vectorMD5SUM(vector, precision);
+    }
+
+    public static String vectorMD5SUM(NiftiVolume v, Integer precision) throws IOException {
+        return niftiMD5SUM(v, precision);
+    }
+
+    public static String tensorMD5SUM(String i_file) throws IOException {
+        return tensorMD5SUM(i_file, 8);
+    }
+
+    public static String tensorMD5SUM(String i_file, Integer precision) throws IOException {
+        NiftiVolume tensorPosDef = NiftiUtil.forceTensorPositiveDefinite(NiftiVolume.read(i_file));
+        return niftiMD5SUM(tensorPosDef, precision);
+    }
+
+    public static String niftiMD5SUM(String i_file) throws IOException {
+        return niftiMD5SUM(i_file, 8);
+    }
+
+    public static String niftiMD5SUM(String i_file, Integer precision) throws IOException {
         NiftiVolume v = NiftiVolume.read(i_file);
-        Nifti1Header h = v.getHeader1();
-        NDimensionalArray d = v.getData();
+        return niftiMD5SUM(v, precision);
+    }
 
-        ArrayList<int[]> indcs = new IndexIterator().iterateReverse(d.getDims());
+    public static String niftiMD5SUM(NiftiVolume v, Integer precision) throws IOException {
+        DataInputStream dataStream = NiftiStreamUtil.getDataReadStream(v, precision);
+        DataInputStream headerStream = NiftiStreamUtil.getNifti1HeaderReadStream(
+                v,
+                (Nifti1Header header) -> {
+                    header.filename = new File(header.filename).getName();
+                    header.descrip = new StringBuffer("");
+                    return header;
+                });
 
-        String md5 = "";
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            indcs.forEach((indc) -> {
-                BigDecimal item = BigDecimal.valueOf(d.get(indc))
-                                            .setScale(precision, RoundingMode.FLOOR);
+        return v.getHeader1().filename
+                .concat(":md5:header,")
+                .concat(DigestUtils.md5Hex(headerStream))
+                .concat(",data,")
+                .concat(DigestUtils.md5Hex(dataStream));
+    }
 
-                BigInteger offset = BigInteger
-                    .valueOf(item.stripTrailingZeros().scale() - precision);
+    public static NiftiVolume getDifference(
+            String f1, String f2, Integer precision) throws IOException {
+        NiftiVolume v1 = NiftiVolume.read(f1);
+        NiftiVolume v2 = NiftiVolume.read(f2);
+        NiftiVolume diff = new NiftiVolume(v1.getHeader1());
 
-                // Here, only checking the unscaled value is not enough. We get 1234 from 
-                // either 0.1234 or 0.01234, up to precision (with precision 5, the first
-                // being 0.12340). We add the number of trailing zeros to the result to
-                // differentiate those unscaled values. It doesn't affect the value nor the
-                // uniqueness of the md5sum, as long as it is performed with this technique.
-                md.update(item.unscaledValue().add(offset).toByteArray());
-            });
-            // Replace filename with basename and remove descrip
-            h.filename = h.filename.replace("\\", "/");
-            int index = h.filename.lastIndexOf("/");
-            h.filename = h.filename.substring(index + 1);
-            h.descrip = new StringBuffer("");
-        
-            // md.update(h.encodeHeader());
-            md5 = Hex.encodeHexString(md.digest());
-        }
-        catch (NoSuchAlgorithmException e) {
-            System.err.println("I'm sorry, but MD5 is not a valid message digest algorithm");
-        }       	
+        new IndexIterator()
+                .iterateReverse(v1.getData().getDims())
+                .parallelStream()
+                .map(it -> {
+                    BigDecimal[] result = new BigDecimal[it.length + 1];
+                    for (int i = 0; i < it.length; i++)
+                        result[i] = BigDecimal.valueOf(it[i]);
+                    result[it.length] = BigDecimal
+                            .valueOf(v1.getData().get(it))
+                            .setScale(precision, RoundingMode.CEILING)
+                            .subtract(BigDecimal
+                                    .valueOf(v2.getData().get(it))
+                                    .setScale(precision, RoundingMode.CEILING));
+                    return result;
+                })
+                .collect(Collectors.toList())
+                .forEach(it -> {
+                    int[] idx = new int[it.length - 1];
+                    for (int i = 0; i < it.length - 1; i++)
+                        idx[i] = it[i].intValue();
+                    diff.getData().set(idx, it[it.length - 1].doubleValue());
+                });
 
-        return h.filename + ":md5," + md5.toString();
+        return diff;
     }
 }
