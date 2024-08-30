@@ -1,32 +1,32 @@
 {
     "Test - nft-nifti - precision 2": {
         "content": [
-            "output.nii.gz:md5:header,8a450969f5b7003b9305c4dff3dc8cc2,data,b85bf167f761a9628fbf3098f19e4357"
+            "output.nii.gz:md5:header,a1d6f9fc0fa0c648e2b761a807007a61,data,505e762062a1916f7c405c913c938585"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-08-29T14:46:33.317435755"
+        "timestamp": "2024-08-30T12:08:01.055498814"
     },
     "Test - nft-nifti - precision 8": {
         "content": [
-            "output.nii.gz:md5:header,8a450969f5b7003b9305c4dff3dc8cc2,data,b85bf167f761a9628fbf3098f19e4357"
+            "output.nii.gz:md5:header,a1d6f9fc0fa0c648e2b761a807007a61,data,6529e4a8556b1800e6da5f973868c447"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-08-29T14:46:48.659445688"
+        "timestamp": "2024-08-30T12:08:12.521603918"
     },
     "Test - nft-nifti - precision default": {
         "content": [
-            "output.nii.gz:md5:header,8a450969f5b7003b9305c4dff3dc8cc2,data,b85bf167f761a9628fbf3098f19e4357"
+            "output.nii.gz:md5:header,a1d6f9fc0fa0c648e2b761a807007a61,data,6529e4a8556b1800e6da5f973868c447"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-08-29T14:46:40.629718093"
+        "timestamp": "2024-08-30T12:08:06.432466035"
     }
 }
